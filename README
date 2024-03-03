@@ -1,0 +1,31 @@
+NAME
+    fand is an OpenBSD deamon to control fan speed depends on CPU temperature
+
+INSTALLATION
+    Currently fand works only with Lenovo/IBM Thinkpad laptops and requires
+    custom kernel to be run. Kernel must be patched with hw.fanlevel.patch
+    patch included into the current distribution.
+
+    Steps to install and setup fand.
+     1. Apply hw.fanlevel.patch, compile and run custom kernel.
+     2. Make sure hw.fanlevel works as expected.
+        # sysctl hw.fanlevel
+        hw.fanlevel=128
+        # sysctl hw.fanlevel=3
+        hw.fanlevel: 128 -> 3
+        # sysctl hw.fanlevel
+        hw.fanlevel=3
+
+        Play with 0-8 and 128 (automatic control) values to make sure everything
+        works as expected. It is expected to be a few seconds delay between
+        sysctl value set and actual fan speed change.
+     3. Install fand port using https://github.com/vchimishuk/openbsd-ports/tree/master/sysutils/fand
+        See fand(1) for more details.
+     4. Potentially it can be dengerous and lead to hardware damage. However,
+        modern hardware should have embeded overheat protection.
+
+AUTHORS
+    Viacheslav Chimishuk <vchimishuk@yandex.ru>
+
+COPYING
+    This programm is released under 2-clause BSD license. See LICENSE file.

@@ -1,0 +1,77 @@
+.Dd $Mdocdate: March 03 2024 $
+.Dt FAND 1
+.Os
+.Sh NAME
+.Nm fand
+.Nd fan speed control depends on CPU temperature
+.Sh SYNOPSIS
+.Nm
+.Op Fl c Ar config
+.Op Fl d
+.Op Fl h
+.Oc
+.Sh DESCRIPTION
+.Nm
+checks CPU temperature every 2 seconds and adjusts fan speed level depends on
+its value. If current temperature is less than temperature boundaries defined
+for the active level fan is switched to the previous level. If current
+temperature is greater than the boundaries level is risen up.
+ Only IBM/Lenovo Thinkpads are supported with custom kernel patch
+which adds
+.Sx hw.fanlevel
+.Xr sysctl 8
+property. Integer number representing fan level can be
+written into hw.fanlevel property.
+.Pp
+The options are as follows:
+.Bl -tag -width Ds
+.It Fl c Ar config
+Path to configuration file.
+.Pa /etc/fand.conf
+is used if not specified. See also
+.Sx CONFIGURATION
+section.
+.It Fl d
+Enter debug mode. Stays in foreground and print diagnostic messages.
+.It Fl h
+Print usage information and exit.
+.El
+.Pp
+.Nm
+is configured using configuration file. Configuration file must include 9 levels
+(0-8) configuration lines. Every line has the following format.
+
+levelN = MIN-MAX
+
+Where N is a level number (0-8). MIN and MAX temperature boundaries.
+.Sh IMPLEMENTATION NOTES
+Fan level values supported by Thinkpad laptops.
+.Bl -column "Brq, Bro, Brc" description
+.It Ic \&0 Ta fan is off
+.It Ic \&1 Ta speed 1
+.It Ic \&2 Ta speed 2
+.It Ic \&3 Ta speed 3
+.It Ic \&4 Ta speed 4
+.It Ic \&5 Ta speed 5
+.It Ic \&6 Ta speed 6
+.It Ic \&7 Ta speed 7
+.It Ic \&64 Ta disengaged
+.It Ic \&128 Ta automatic control
+.Sh FILES
+.Bl -tag -width "/dev/fand.conf" -compact
+.It Pa /dev/fand.conf
+Default configuration file location.
+.Sh EXAMPLES
+See
+.Pa /usr/local/share/examples/fand/fand.conf
+.Sh AUTHORS
+Viacheslav Chimishuk
+.Mt vchimishuk@yandex.ru
+https://github.com/vchimishuk/fand
+.Sh BUGS
+Fan speed manipulation can be risky and potentially lead to hardware
+damage. You have been warned and no one but you takes all the responsibly in
+such cases.
+ On Thinkpad X121e level 4 turns fan off completely instead of running it with
+some speed between 3 and 5 levels. So, using it on X121e you need to take it
+into account when composing your configuration file.
